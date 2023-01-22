@@ -91,6 +91,46 @@ public class FirstTest {
     }
 
     @Test
+    public void testSearchResults() {
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementPresentBy(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic search by Java",
+                5
+        );
+
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot clear search field",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find X to cancel search",
+                5
+        );
+
+        waitForElementNotPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Object-oriented programming language is still present on the page",
+                5
+        );
+    }
+
+    @Test
     public void testCompareArticleTitle() {
         waitForElementByAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
