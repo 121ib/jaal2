@@ -125,6 +125,15 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testSearch() {
+        assertElementHasText(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Search Wikipedia",
+                "assert error"
+        );
+    }
+
     private WebElement waitForElementPresentBy(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -159,5 +168,17 @@ public class FirstTest {
         WebElement element = waitForElementPresentBy(by, error_message, timeoutInSeconds);
         element.clear();
         return element;
+    }
+
+    private void assertElementHasText(By by, String expextedValue, String error_message) {
+        WebElement element = waitForElementPresentBy(by, "Cannot find asser element", 15);
+
+        String actualValue = element.getAttribute("text");
+
+        Assert.assertEquals(
+                error_message,
+                expextedValue,
+                actualValue
+        );
     }
 }
