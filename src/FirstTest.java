@@ -168,6 +168,7 @@ public class FirstTest {
                 article_title
         );
     }
+
     @Test
     public void testSwipeArticle() {
         waitForElementByAndClick(
@@ -212,7 +213,7 @@ public class FirstTest {
     }
 
     @Test
-    public void saveFirstArticleToMyList(){
+    public void saveFirstArticleToMyList() {
         waitForElementByAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find Search Wikipedia input",
@@ -291,13 +292,13 @@ public class FirstTest {
         );
 
         waitForElementPresentBy(
-                By.xpath("//*[@text='"+name_of_folder+"']"),
+                By.xpath("//*[@text='" + name_of_folder + "']"),
                 "Cannot find created folder",
                 5
         );
 
         waitForElementByAndClick(
-                By.xpath("//*[@text='"+name_of_folder+"']"),
+                By.xpath("//*[@text='" + name_of_folder + "']"),
                 "Cannot find created folder",
                 5
         );
@@ -321,14 +322,14 @@ public class FirstTest {
     }
 
     @Test
-    public void testAmountOfNotEmptySearch(){
+    public void testAmountOfNotEmptySearch() {
         waitForElementByAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find Search Wikipedia input",
                 5
         );
 
-        String search_line="Ruby";
+        String search_line = "Ruby";
         waitForElementByAndSendKeys(
                 By.xpath("//*[contains(@text, 'Search…')]"),
                 search_line,
@@ -336,20 +337,51 @@ public class FirstTest {
                 5
         );
 
-        String search_result_locator="//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
+        String search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
         waitForElementPresentBy(
                 By.xpath(search_result_locator),
-                "Cannot find anything by the request "+search_line,
+                "Cannot find anything by the request " + search_line,
                 15
         );
 
-        int amount_of_search_results=getAmountOfElements(
+        int amount_of_search_results = getAmountOfElements(
                 By.xpath(search_result_locator)
         );
 
         Assert.assertTrue(
                 "We found to few results",
-                amount_of_search_results>0
+                amount_of_search_results > 0
+        );
+    }
+
+    @Test
+    public void testAmountOfEmptySearch() {
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        String search_line = "asdfasdf";
+        waitForElementByAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                search_line,
+                "Cannot find search input",
+                5
+        );
+
+        String search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
+        String empty_result_label = "//*[@text='No results found']";
+
+        waitForElementPresentBy(
+                By.xpath(empty_result_label),
+                "Cannot find empty result label by the request " + search_line,
+                15
+        );
+
+        assertElementNotPresent(
+                By.xpath(search_result_locator),
+                "We've found some results by request " + search_line
         );
     }
 
@@ -380,8 +412,8 @@ public class FirstTest {
 //        loginField.setValue(login);
     }
 
-    private int getAmountOfElements(By by){
-        List elements=driver.findElements(by);
+    private int getAmountOfElements(By by) {
+        List elements = driver.findElements(by);
         return elements.size();
     }
 
@@ -409,7 +441,7 @@ public class FirstTest {
         );
     }
 
-    protected void swipeUp(int timeOfSwipe){
+    protected void swipeUp(int timeOfSwipe) {
         TouchAction action = new TouchAction(driver);
         Dimension size = driver.manage().window().getSize();
         int x = size.width / 2;
@@ -423,15 +455,15 @@ public class FirstTest {
                 .perform();
     }
 
-    protected void swipeUpQuick(){
+    protected void swipeUpQuick() {
         swipeUp(200);
     }
 
-    protected void swipeUpToFindElement(By by, String error_message, int max_swipes){
-        int already_swiped=0;
-        while (driver.findElements(by).size()==0){
-            if(already_swiped > max_swipes){
-                waitForElementPresentBy(by,"Cannot find element by swipe up. \n" + error_message,0);
+    protected void swipeUpToFindElement(By by, String error_message, int max_swipes) {
+        int already_swiped = 0;
+        while (driver.findElements(by).size() == 0) {
+            if (already_swiped > max_swipes) {
+                waitForElementPresentBy(by, "Cannot find element by swipe up. \n" + error_message, 0);
                 return;
             }
             swipeUpQuick();
@@ -439,7 +471,7 @@ public class FirstTest {
         }
     }
 
-    protected void swipeElementToLeft(By by, String error_message){
+    protected void swipeElementToLeft(By by, String error_message) {
         WebElement element = waitForElementPresentBy(
                 by,
                 error_message,
@@ -454,10 +486,18 @@ public class FirstTest {
 
         TouchAction action = new TouchAction(driver);
         action
-                .press(right_x,middle_y)
+                .press(right_x, middle_y)
                 .waitAction(300)
                 .moveTo(left_x, middle_y)
                 .release()
                 .perform();
+    }
+
+    private void assertElementNotPresent(By by, String error_message) {
+        int amount_of_elements = getAmountOfElements(by);
+        if (amount_of_elements > 0) {
+            String default_message = "An element " + by.toString() + " supposed to be not present";
+            throw new AssertionError(default_message + " " + error_message);
+        }
     }
 }
