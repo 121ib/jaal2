@@ -671,6 +671,35 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void Ex6() {
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic search by Java",
+                5
+        );
+
+        assertElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Java (programming language)",
+                "Cannot find article title",
+                0
+        );
+    }
+
     private WebElement waitForElementPresentBy(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -717,6 +746,18 @@ public class FirstTest {
 
     private void assertElementHasText(By by, String expextedValue, String error_message) {
         WebElement element = waitForElementPresentBy(by, "Cannot find asser element", 15);
+
+        String actualValue = element.getAttribute("text");
+
+        Assert.assertEquals(
+                error_message,
+                expextedValue,
+                actualValue
+        );
+    }
+
+    private void assertElementPresent(By by, String expextedValue, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresentBy(by, "Cannot find asser element", timeoutInSeconds);
 
         String actualValue = element.getAttribute("text");
 
