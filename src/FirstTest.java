@@ -479,6 +479,198 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void Ex5() {
+        //first article
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic search by Java",
+                5
+        );
+
+        waitForElementPresentBy(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title",
+                15
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find button to open article options",
+                5
+        );
+
+        waitForElementPresentBy(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find options to add article to reading list",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find options to add article to reading list",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/onboarding_button"),
+                "Cannot find 'Got ot' tip overlay",
+                5
+        );
+
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/text_input"),
+                "Cannot find input to set name of article folder",
+                5
+        );
+
+        String name_of_folder = "Learning programming";
+        MobileElement element = (MobileElement) driver.findElement(By.id("org.wikipedia:id/text_input"));
+        element.setValue(name_of_folder);
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='OK']"),
+                "Cannot press OK button",
+                5
+        );
+
+        //second article
+        waitForElementByAndClick(
+                By.xpath("//*[@content-desc='Navigate up']"),
+                "Cannot find X to main",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='High-level programming language']"),
+                "Cannot find 'High-level programming language",
+                5
+        );
+
+        waitForElementPresentBy(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title",
+                15
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find button to open article options",
+                5
+        );
+
+        waitForElementPresentBy(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find options to add article to reading list",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find options to add article to reading list",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot find create folder",
+                5
+        );
+
+        //check 2 article
+        waitForElementByAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article, cannot find X link",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+                "Cannot find navigation button to My List",
+                5
+        );
+
+        waitForElementPresentBy(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot find created folder",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot find created folder",
+                5
+        );
+
+
+        waitForElementPresentBy(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot find saved article"
+        );
+        waitForElementPresentBy(
+                By.xpath("//*[@text='JavaScript']"),
+                "Cannot find saved article"
+        );
+
+        //delete and check one article
+        swipeElementToLeft(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot find saved article"
+        );
+
+        waitForElementNotPresent(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot delete saved article",
+                5
+        );
+
+        // check one article
+        waitForElementByAndClick(
+                By.xpath("//*[@text='JavaScript']"),
+                "Cannot find saved article",
+                5
+        );
+
+        WebElement title_element = waitForElementPresentBy(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title",
+                15
+        );
+
+        String article_title = title_element.getAttribute("text");
+        Assert.assertEquals(
+                "We see unexpect title!",
+                "JavaScript",
+                article_title
+        );
+    }
+
     private WebElement waitForElementPresentBy(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
